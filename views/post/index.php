@@ -2,26 +2,12 @@
 
 use App\helpers\Text;
 use App\model\Post;
+use App\URL;
 
-$pdo = new PDO('mysql:dbname=tutoblog;host=127.0.0.1:3306','root' , '' , [
-    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
-]);
+$pdo = \App\Connection::getPDO();
+
 //pagination
-$page = $_GET['page'] ?? 1;
-if (!filter_var($page , FILTER_VALIDATE_INT)){
-    throw new Exception("Numero de page invalide");
-}
-//elimination ?page=1
-if($page==="1"){
-    header('location :' . $router->url('home'));
-    http_response_code(301); //http code redirection
-    exit();
-}
-
-$currentPage = (int)$page ;
-if ($currentPage <= 0 ){
-    throw new Exception("Numero de page invalide");
-}
+$currentPage = URL::getPositivrInt('page' , 1) ;
 $count = (int)$pdo->query("SELECT count(id) from post")->fetch(PDO::FETCH_NUM)[0];
 $perpage = 12;
 $pages = ceil($count/$perpage); //cette fonction vas arrendire le nombre
