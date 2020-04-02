@@ -17,6 +17,8 @@ if($currentPage > $pages){
 //calcul offset formule
 $offset = $perpage * ($currentPage - 1);
 $query = $pdo->query("SELECT * FROM post order by created_at DESC LIMIT $perpage OFFSET $offset ");
+/** @var $posts Post */
+/** @var  $router \App\Router */
 $posts = $query->fetchAll(PDO::FETCH_CLASS , Post::class);
 ?>
 <h1>Mon Blog</h1>

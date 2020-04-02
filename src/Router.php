@@ -36,6 +36,7 @@ class Router
         $match = $this->router->match();
         $view = $match["target"];
         $router = $this;
+        $params = $match["params"];
         ob_start();
         require $this->viewPath .DIRECTORY_SEPARATOR. $view . '.php';
         $content = ob_get_clean();
