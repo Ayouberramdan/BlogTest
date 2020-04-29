@@ -20,13 +20,11 @@ header('location:' . $url);
 }
 
 $paginatedQuery = new \App\PaginatedQuery("SELECT post.* FROM post inner join post_category pc on post.id = pc.post_id where pc.category_id = {$category->getId()} order by created_at DESC ",
-"SELECT count(post_id) from post_category where category_id = {$category->getId()}",
-Post::class);
+"SELECT count(post_id) from post_category where category_id = {$category->getId()}");
 
 /** @var $posts \App\model\Post[] */
 /** @var  $router \App\Router */
-$posts = $paginatedQuery->getItems();
-dd($posts);
+$posts = $paginatedQuery->getItems(Post::class);
 $link = $router->url("category" , ["id" => $category->getId() , "slug" => $category->getSlug()]);
 ?>
 
@@ -48,11 +46,6 @@ $link = $router->url("category" , ["id" => $category->getId() , "slug" => $categ
 </div>
 
 <div class="d-flex justify-content-between my-4">
-    <?php if ($currentPage > 1): ?>
-        <a href="<?= $router->url("category" , ["id" => $category->getId() , "slug" => $category->getSlug()]);?>?page=<?= $currentPage-1?>" class="btn btn-primary" > &laquo; page precedente</a>
-    <?php endif;?>
-
-    <?php if ($currentPage < $pages): ?>
-        <a href="<?=$router->url("category" , ["id" => $category->getId() , "slug" => $category->getSlug()]);?>?page=<?= $currentPage+1?>" class="btn btn-primary ml-auto"> page suivate &raquo;</a>
-    <?php endif;?>
+    <?= $paginatedQuery->getPerviousLink($router->url("category" , ["id" => $category->getId() , "slug" => $category->getSlug()]))?>
+    <?= $paginatedQuery->getnextLink($router->url("category" , ["id" => $category->getId() , "slug" => $category->getSlug()]))?>
 </div>
